@@ -9,18 +9,26 @@ __date__ = '13/04/2015'
 import matplotlib.pyplot as plt
 import pyart
 
+def plotImage(radar):
+    display = pyart.graph.RadarMapDisplay(radar)
+    # display.plot_ppi_map('spectrum_width', 0, vmin=-5., vmax=5.,
+    #                        min_lon=-316., max_lon=324,
+    #                        min_lat=-0.9, max_lat=9.,
+    #                        lat_0=radar.latitude['data'][0],
+    #                        lon_0=radar.longitude['data'][0])
+    display.plot_ppi_map('spectrum_width', 0, vmin=-5., vmax=5.,
+                         lat_0=radar.latitude['data'][0],
+                         lon_0=radar.longitude['data'][0])
+    #display.plot_range_ring(200., line_style='k--')
+    #display.plot_line_xy(radar.longitude['data'][0], radar.latitude['data'][0], line_style='k-')
+    display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
+    plt.show()
+
 def main():
     filename = 'XXX140331061059.RAW1JMJ'
-
-    # create the plot using RadarDisplay (recommended method)
     radar = pyart.io.read(filename)
-    display = pyart.graph.RadarDisplay(radar)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    display.plot('reflectivity', 0, vmin=-32, vmax=64.)
-    display.plot_range_rings([100, 200, 300, 400])
-    display.plot_cross_hair(5.)
-    plt.show()
+     # create the plot using RadarMapDisplay (recommended method)
+    plotImage(radar)
 
 if __name__ == '__main__':
     main()
