@@ -3,14 +3,14 @@ __description__ = 'Single-Doppler Radar Wind-Field Retrieval Experiment On a Qua
 __version__ = '0.1'
 __date__ = '13/04/2015'
 
-
+import os
 import matplotlib.pyplot as plt
 import pyart
 from mpl_toolkits.basemap import Basemap
 
 __file__ = "/usr/local/lib/python2.7/dist-packages/PyFuncemeClimateTools/"
 
-def plotImage(radar):
+def plotImage(radar, localdir):
     """
     Funcao para Plotar Imagem do Radar
     :param radar: Objeto Radar
@@ -32,15 +32,13 @@ def plotImage(radar):
     #create the plot using RadarMapDisplay (recommended method)
     display = pyart.graph.RadarMapDisplay(radar)
     display.plot_ppi_map('velocity', 0, vmin=-10., vmax=10.,
-                           min_lon=-316., max_lon=325.5,
-                           min_lat=-0.9, max_lat=9.6,
-                           lat_0=radar.latitude['data'][0],
-                           lon_0=radar.longitude['data'][0])
+                         min_lat=-9.6, max_lat=-0.9,
+                         max_lon=325.5, min_lon=316.,
+                         lat_lines=radar.latitude['data'],
+                         lon_lines=radar.longitude['data'])
 
-    # display.plot_ppi_map('velocity', 0, vmin=-5., vmax=5.,
-    #                      lat_0=radar.latitude['data'][0],
-    #                      lon_0=radar.longitude['data'][0])
-
+    display.plot_range_rings([100., 200., 300., 400.])
+    display.plot_cross_hair(400.)
     display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
     plt.show()
 
@@ -51,6 +49,7 @@ def read_radar():
     :return: Objeto Radar com todas as suas Caracteristicas
     """
     filename = 'XXX140331061059.RAW1JMJ'
+    local_dir = os.path.dirname(__file__)
     radar = pyart.io.read_sigmet(filename)
 
     return radar
@@ -58,7 +57,7 @@ def read_radar():
 
 def vap(radar):
     """
-    Implementacao da tecnica de Processametno VAP (Velocity-Azimuth Processing)
+    Implementacao da tecnica de Processamento VAP (Velocity-Azimuth Processing)
     :param radar:
     :return:
     """
@@ -69,4 +68,4 @@ def vap(radar):
 if __name__ == '__main__':
     radar = read_radar()
     vap(radar)
-    plotImage(radar)
+    plotImage(radar, __file__)
