@@ -4,8 +4,9 @@ __version__ = '0.1'
 __date__ = '13/04/2015'
 
 import os
-import matplotlib.pyplot as plt
 import pyart
+import math
+import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
 __file__ = "/usr/local/lib/python2.7/dist-packages/PyFuncemeClimateTools/"
@@ -36,12 +37,10 @@ def plotImage(radar, localdir):
                          max_lon=325.5, min_lon=316.,
                          lat_lines=radar.latitude['data'],
                          lon_lines=radar.longitude['data'])
-
     display.plot_range_rings([100., 200., 300., 400.])
-    display.plot_cross_hair(400.)
     display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
     plt.show()
-
+    #plt.savefig('Radar_Quixeramobim_Band_S - Product VAP.png', format='png')
 
 def read_radar():
     """
@@ -62,10 +61,24 @@ def vap(radar):
     :return:
     """
 
+    #The horizontal wind components u and v
+    u, v = []
+    for teta in range(len(radar.azimuth['data'])):
+        u_1 = 1 * math.cos(radar.azimuth['data'][teta] - (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1]))
+        u_2 = 1 * math.cos(radar.azimuth['data'][teta] + (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1]))
+        u_3 = math.sin((2 * (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1])))
+        u[teta] = (u_1 - u_2) / u_3
+
+        v_1 = 1 * math.sin(radar.azimuth['data'][teta] + (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1]))
+        v_2 = 1 * math.sin(radar.azimuth['data'][teta] - (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1]))
+        v_3 = math.sin((2 * (radar.azimuth['data'][teta] - radar.azimuth['data'][teta+1])))
+        v[teta] = (v_1 - v_2) / v_3
+
+
     return
 
 
 if __name__ == '__main__':
     radar = read_radar()
-    vap(radar)
+    #vap(radar)
     plotImage(radar, __file__)
