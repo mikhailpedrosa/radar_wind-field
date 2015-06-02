@@ -8,16 +8,13 @@ import pyart
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
-
-__file__ = "/usr/local/lib/python2.7/dist-packages/PyFuncemeClimateTools/"
 
 ELEVATION_LIST = {
     'X': ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5", "8.5", "9.5", "10.5", "11.5", "12.5"],
     'S': ["-0.5", "0.0", "0.5", "1.0", "2.0", "3.0", "4.0", "5.5", "7.0", "8.5"],
 }
 
-def plotImage(radar, localdir):
+def plot_image(radar):
     """
     Funcao para Plotar Imagem do Radar
     Plot function for Radar Image
@@ -25,17 +22,6 @@ def plotImage(radar, localdir):
     :param radar: Radar Object - Objeto Radar
     :return:
     """
-    # map = Basemap(projection='cyl',
-    #               llcrnrlat=-9.6,
-    #               urcrnrlat=-0.9,
-    #               llcrnrlon=316.,
-    #               urcrnrlon=325.5,
-    #               resolution='l')
-    # map.drawcountries(linewidth=0.4)
-    # map.drawcoastlines(linewidth=0.4)
-    # map.drawstates(linewidth=0.4)
-    #
-    # map.readshapefile(localdir + '/shp/ceara', 'world', drawbounds=True, linewidth=.5, color='k')
 
     #create the plot using RadarMapDisplay
     display = pyart.graph.RadarMapDisplay(radar)
@@ -46,9 +32,21 @@ def plotImage(radar, localdir):
                          lon_lines=radar.longitude['data'])
     display.plot_range_rings([100., 200., 300., 400.])
     display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
+    #plt.show()
+    #plt.close()
+    plt.savefig('Radar_Quixeramobim_Band_S - Product VAP.png', format='png')
+
+
+def plot_graph(radar):
+
+    y = radar.azimuth['data'].reshape(10,360)
+    v = radar.fields['velocity']['data'].reshape(10,360,253)
+    x = v[2,:,100]
+
+    plt.plot(y[2,:], x, lw=1)
+    plt.ylim(-25,25)
     plt.show()
-    plt.close()
-    #plt.savefig('Radar_Quixeramobim_Band_S - Product VAP.png', format='png')
+    #plt.savefig('Radar_Quixeramobim_Band_S - Velocity X Azimuth.png', format='png')
 
 
 def read_radar():
@@ -106,12 +104,15 @@ def dic_azimuth_elevation(radar):
 
     #print radar.info()
 
+
 if __name__ == '__main__':
     radar = read_radar()
     #print radar.info()
     a =  radar.fields['velocity']['data'].reshape(10,360,253)
-    print a[0,:,0]
-    exit()
+    #print a[0,:,0]
+    #exit()
+    #plot_image(radar)
+    plot_graph(radar)
+
     #dic_azimuth_elevation(radar)
     #vap(radar)
-    plotImage(radar, __file__)
