@@ -12,6 +12,10 @@ from mpl_toolkits.basemap import Basemap
 
 __file__ = "/usr/local/lib/python2.7/dist-packages/PyFuncemeClimateTools/"
 
+ELEVATION_LIST = {
+    'X': ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5", "8.5", "9.5", "10.5", "11.5", "12.5"],
+    'S': ["-0.5", "0.0", "0.5", "1.0", "2.0", "3.0", "4.0", "5.5", "7.0", "8.5"],
+}
 
 def plotImage(radar, localdir):
     """
@@ -43,6 +47,7 @@ def plotImage(radar, localdir):
     display.plot_range_rings([100., 200., 300., 400.])
     display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
     plt.show()
+    plt.close()
     #plt.savefig('Radar_Quixeramobim_Band_S - Product VAP.png', format='png')
 
 
@@ -82,8 +87,31 @@ def vap(radar):
 
     return
 
+def dic_azimuth_elevation(radar):
+    velocity_matrix = radar.fields['velocity']['data']
+    elevation_list = ELEVATION_LIST
+    range_list = radar.range['data']
+    azimuth_list = radar.azimuth['data']
+
+
+    print elevation_list
+    #print matrix_velocity.shape, list_azimuth.shape, list_range.shape, list_elevation.shape
+
+    dera = {elevation_list: {range_list: {azimuth_list: velocity_matrix}}}
+
+    #dic = (dera, radar.fields['velocity']['data'])
+
+    #print dera
+    #print a
+
+    #print radar.info()
 
 if __name__ == '__main__':
     radar = read_radar()
-    vap(radar)
+    #print radar.info()
+    a =  radar.fields['velocity']['data'].reshape(10,360,253)
+    print a[0,:,0]
+    exit()
+    #dic_azimuth_elevation(radar)
+    #vap(radar)
     plotImage(radar, __file__)
