@@ -1,5 +1,10 @@
 # radar_wind-field
 
+#Introducao
+
+Os dados dos Graficos estão sendo gerado no sentido anti horario.
+
+
 
 REFERENCE
 
