@@ -26,13 +26,12 @@ if __name__ == '__main__':
     start = datetime.datetime.now()
     radar = read_radar()
     a =  radar.fields['velocity']['data'].reshape(10,360,253)
-    #print a[0,:,0]
-    #exit()
-    #vap(radar)
-    #dic_azimuth_elevation(radar)
+    r = 67
+    u, v = vap(radar)
+    plot_vector(u, v)
     #plot_image(radar)
-    plot_graph_points(radar)
-    plot_graph_lines(radar)
+    #plot_graph_lines(radar, r)
+    #plot_graph_points(radar, r)
     dif = datetime.datetime.now() - start
     print '%i s' % dif.seconds
 

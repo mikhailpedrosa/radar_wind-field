@@ -24,61 +24,79 @@ def vap(radar):
     u = np.zeros((10,360,253))
     v = np.zeros((10,360,253))
 
+    u_1 = np.zeros((10,360,253))
+    u_2 = np.zeros((10,360,253))
+    v_1 = np.zeros((10,360,253))
+    v_2 = np.zeros((10,360,253))
+
     velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
     azimuth = radar.azimuth['data']
 
-    ca = velocity_ca(radar)
-    cb = velocity_cb(radar)
+    #ca = velocity_ca(velocity_radial)
+    #cb = velocity_cb(velocity_radial)
+    nsweeps = radar.nsweeps
+    nrays = radar.nrays / 10
+    ngates = radar.ngates
 
-    print azimuth[0]
+    #print nsweeps, nrays, ngates
 
-    for elevation in range(10):
-        for theta in range(360):
-            for rang in range(253):
-                u_1 = velocity_radial[elevation, theta, rang] * math.cos(azimuth[theta] - 1)
-                u_2 = velocity_radial[elevation, theta, rang] * math.cos(azimuth[theta] + 1)
+    for elevation in range(nsweeps-1):
+        for theta in range(nrays-1):
+            for rang in range(ngates-1):
+                u_1[elevation, theta, rang] = velocity_radial[elevation, theta+1, rang] * math.cos(azimuth[theta] - 1)
+                u_2[elevation, theta, rang] = velocity_radial[elevation, theta-1, rang] * math.cos(azimuth[theta] + 1)
+                u[elevation, theta, rang] = (u_1[elevation, theta, rang] - u_2[elevation, theta, rang]) / (math.sin(2))
 
-                u[theta] = (u_1 - u_2) / (math.sin(2))
+                #print elevation, theta, rang, "\n", u_1[elevation, theta, rang], "\n", u_2[elevation, theta, rang], "\n", u[elevation, theta, rang]
 
-                v_1 = velocity_radial[elevation, theta, rang] * math.sin(radar.azimuth['data'][theta] + 1)
-                v_2 = velocity_radial[elevation, theta, rang] * math.sin(radar.azimuth['data'][theta] - 1)
+                v_1[elevation, theta, rang] = velocity_radial[elevation, theta-1, rang] * math.sin(azimuth[theta] + 1)
+                v_2[elevation, theta, rang] = velocity_radial[elevation, theta+1, rang] * math.sin(azimuth[theta] - 1)
 
-                v[theta] = (v_1 - v_2) / (math.sin(2))
+                v[elevation, theta, rang] = (v_1[elevation,theta,rang] - v_2[elevation,theta,rang]) / (math.sin(2))
+                #print elevation, theta, rang
+    return u, v
 
-    return
+def velocity_ca(velocity_radial):
+    """
+    :param velocity_radial:
+    :return:
+    """
 
-def velocity_ca(radar):
-
-    velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
-
-    for degree in range(360):
-        velocity_ca = velocity_radial
-
-    return
+    for degree in range(1, 361):
+        ca = velocity_radial[:,degree-1,:]
+        #print velocity_ca
+        #raw_input()
+    return ca
 
 
-def velocity_cb(radar):
-    return
+def velocity_cb(velocity_radial):
 
+    for degree in range(1, 361):
+        if degree != 360:
+            cb = velocity_radial[:,degree+1,:]
+        else:
+            cb = velocity_radial[:,degree,:]
+        #raw_input()
+    return cb
 
 #@profile()
-def dic_azimuth_elevation(radar):
-    velocity_matrix = radar.fields['velocity']['data']
-    elevation_list = ELEVATION_LIST
-    range_list = radar.range['data']
-    azimuth_list = radar.azimuth['data']
-
-
-    print elevation_list
-    #print matrix_velocity.shape, list_azimuth.shape, list_range.shape, list_elevation.shape
-
-    dera = {elevation_list: {range_list: {azimuth_list: velocity_matrix}}}
-
-    #dic = (dera, radar.fields['velocity']['data'])
-
-    #print dera
-    #print a
-
-    #print radar.info()
-
-    return
+# def dic_azimuth_elevation(radar):
+#     velocity_matrix = radar.fields['velocity']['data']
+#     elevation_list = ELEVATION_LIST
+#     range_list = radar.range['data']
+#     azimuth_list = radar.azimuth['data']
+#
+#
+#     print elevation_list
+#     #print matrix_velocity.shape, list_azimuth.shape, list_range.shape, list_elevation.shape
+#
+#     dera = {elevation_list: {range_list: {azimuth_list: velocity_matrix}}}
+#
+#     #dic = (dera, radar.fields['velocity']['data'])
+#
+#     #print dera
+#     #print a
+#
+#     #print radar.info()
+#
+#     return

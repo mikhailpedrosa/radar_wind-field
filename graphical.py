@@ -29,15 +29,15 @@ def plot_image(radar):
     display.plot_point(radar.longitude['data'][0], radar.latitude['data'][0])
     #plt.show()
     #plt.close()
-    plt.savefig('Radar_Quixeramobim_Band_S - Product VAP.png', format='png')
+    plt.savefig('Radar_Quixeramobim_Band_S - Product Velocity.png', format='png')
 
 #@profile()
-def plot_graph_points(radar):
+def plot_graph_points(radar, r):
 
     azimuth = radar.azimuth['data'].reshape(10,360)
     velocity = radar.fields['velocity']['data'].reshape(10,360,253)
 
-    y = velocity[2,:,1]
+    y = velocity[2,:,r]
     x = azimuth[2, :]
 
     figure = plt.figure()
@@ -54,7 +54,7 @@ def plot_graph_points(radar):
     plt.grid()
     plt.ylim(-20,20)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth (1,49km Range)", fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth (99,83 km Range)", fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
@@ -63,12 +63,13 @@ def plot_graph_points(radar):
     #plt.close()
     plt.savefig('Radar_Quixeramobim_Band_S - Velocity X Azimuth - Points.png', format='png')
 
-def plot_graph_lines(radar):
+#@profile()
+def plot_graph_lines(radar, r):
 
     azimuth = radar.azimuth['data'].reshape(10,360)
     velocity = radar.fields['velocity']['data'].reshape(10,360,253)
 
-    y = velocity[2,:,1]
+    y = velocity[2,:,r]
     x = azimuth[2, :]
 
     figure = plt.figure()
@@ -85,11 +86,24 @@ def plot_graph_lines(radar):
     plt.grid()
     plt.ylim(-20,20)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth (1,49km Range)", fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth (99,83 km Range)", fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
     #plt.show()
     #plt.close()
-    plt.savefig('Radar_Quixeramobim_Band_S - Velocity X Azimuth.png - Line.png', format='png')
+    plt.savefig('Radar_Quixeramobim_Band_S - Velocity X Azimuth - Line.png', format='png')
+
+#@profile()
+def plot_vector(u, v):
+    figure = plt.figure()
+    q = plt.quiver(u[3,:,1], v[3,:,1])
+    qk = plt.quiverkey(q, 0.5, 0.92, 2, r'$2 \frac{m}{s}$', labelpos='W',
+               fontproperties={'weight': 'bold'})
+    l,r,b,t = plt.axis()
+    dx, dy = r-l, t-b
+    plt.axis([l-0.05*dx, r+0.05*dx, b-0.05*dy, t+0.05*dy])
+
+    plt.title('Minimal arguments, no kwargs')
+    plt.show()
