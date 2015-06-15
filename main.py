@@ -8,6 +8,7 @@ import datetime
 import os
 from graphical import *
 from vap import *
+from tempfile import TemporaryFile
 
 #@profile()
 def read_radar():
@@ -23,16 +24,21 @@ def read_radar():
     return radar
 
 if __name__ == '__main__':
-    start = datetime.datetime.now()
     radar = read_radar()
-    a =  radar.fields['velocity']['data'].reshape(10,360,253)
     r = 67
-    u, v = vap(radar)
-    plot_vector(u, v)
+    start = datetime.datetime.now()
+    #u, v = vap(radar)
+    #np.save('vectoru', u)
+    #np.save('vectorv', v)
+    u1 = np.load('vectoru.npy')
+    v1 = np.load('vectorv.npy')
+    dif = datetime.datetime.now() - start
+    print '%i s' % dif.seconds
+    plot_vector(radar, u1, v1)
     #plot_image(radar)
     #plot_graph_lines(radar, r)
     #plot_graph_points(radar, r)
-    dif = datetime.datetime.now() - start
-    print '%i s' % dif.seconds
+
+
 
 

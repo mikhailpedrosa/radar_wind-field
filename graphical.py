@@ -7,6 +7,9 @@ __date__ = '13/04/2015'
 import pyart
 import matplotlib.pyplot as plt
 from memory_profiler import profile
+import numpy as np
+import math
+
 
 #@profile()
 def plot_image(radar):
@@ -96,14 +99,17 @@ def plot_graph_lines(radar, r):
     plt.savefig('Radar_Quixeramobim_Band_S - Velocity X Azimuth - Line.png', format='png')
 
 #@profile()
-def plot_vector(u, v):
-    figure = plt.figure()
-    q = plt.quiver(u[3,:,1], v[3,:,1])
-    qk = plt.quiverkey(q, 0.5, 0.92, 2, r'$2 \frac{m}{s}$', labelpos='W',
-               fontproperties={'weight': 'bold'})
-    l,r,b,t = plt.axis()
-    dx, dy = r-l, t-b
-    plt.axis([l-0.05*dx, r+0.05*dx, b-0.05*dy, t+0.05*dy])
+def plot_vector(radar, u, v):
+    azimuth =  radar.azimuth['data'].reshape(10,360)
+    rang = radar.range['data']
+    velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
+    theta, r = np.meshgrid(azimuth[3,:], rang)
 
-    plt.title('Minimal arguments, no kwargs')
+    figure = plt.figure()
+    figure.add_subplot(111, polar=True)
+    #x = (1 * math.cos(theta)) - (1 * math.sin(theta))
+    #y = (1 * math.sin(theta))  + (1 * math.cos(theta))
+    #q = ax.quiver(theta, r, x, y )
+    plt.quiver(theta, r, u[3,:,135], v[3,:,135], velocity_radial[3,:,135])
+    #plt.barbs(theta, r, u[3,:,:], v[3,:,:], velocity_radial[3,:,:])
     plt.show()

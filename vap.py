@@ -30,8 +30,7 @@ def vap(radar):
     v_2 = np.zeros((10,360,253))
 
     velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
-    azimuth = radar.azimuth['data']
-
+    azimuth =  radar.azimuth['data']
     #ca = velocity_ca(velocity_radial)
     #cb = velocity_cb(velocity_radial)
     nsweeps = radar.nsweeps
