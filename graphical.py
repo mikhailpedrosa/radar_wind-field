@@ -60,13 +60,13 @@ def plot_graph_points_no_filters(radar, r):
     plt.grid()
     plt.ylim(-35.,35.)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth - ({:.2f} km Range)".format((r*1490)/1000), fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth - ({:.2f} km Range)".format((r*1490)/1000.), fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
-    plt.show()
-    plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - ({:.2f} km Range) - Points.png".format((r*1490)/1000.), format='png')
+    #plt.show()
+    plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - ({:.2f} km Range) - Points (No Filter).png".format((r*1490)/1000.), format='png')
     plt.close()
 
 #@profile()
@@ -93,14 +93,13 @@ def plot_graph_lines_no_filters(radar, r):
     plt.grid()
     plt.ylim(-35.,35.)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth ({:.2f} km Range) - ".format((r*1490)/1000.), fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth ({:.2f} km Range)".format((r*1490)/1000.), fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
-    plt.show()
-
-    plt.savefig('Radar_Qxb_Band_S - Velocity x Azimuth ({:.2f} km Range) - Line.png'.format((r*1490)/1000.), format='png')
+    #plt.show()
+    plt.savefig('Radar_Qxb_Band_S - Velocity x Azimuth ({:.2f} km Range) - Line (No Filter).png'.format((r*1490)/1000.), format='png')
     plt.close()
 
 
@@ -154,7 +153,7 @@ def plot_graph_points_filters(radar, r):
     y = velocity[2,:,r]
     x = azimuth[2, :]
 
-    y = moving_average(y,3)
+    y = moving_average(y,2)
 
     figure = plt.figure()
     ax = figure.add_subplot(111)
@@ -168,15 +167,15 @@ def plot_graph_points_filters(radar, r):
     # ax.yaxis.set_ticks_position('left')
 
     plt.grid()
-    plt.ylim(-20,20)
+    plt.ylim(-35.,35.)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth (99,83 km Range)", fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth ({:.2f} km Range)".format((r*1490)/1000.), fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
-    plt.show()
-    plt.savefig('Radar_Qxb_Band_S - Velocity x Azimuth - Points.png', format='png')
+    #plt.show()
+    plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - ({:.2f} km Range) - Points.png".format((r*1490)/1000.), format='png')
     plt.close()
 
 #@profile()
@@ -188,8 +187,8 @@ def plot_graph_lines_filters(radar, r):
     y = velocity[2,:,r]
     x = azimuth[2, :]
 
-    #y = moving_average(y,2)
-    #y = gauss(y,3)
+    #y = moving_average(y,3)
+    y = gauss(y,3)
     #y = median(y,3)
 
     figure = plt.figure()
@@ -204,15 +203,15 @@ def plot_graph_lines_filters(radar, r):
     # ax.yaxis.set_ticks_position('left')
 
     plt.grid()
-    plt.ylim(-35,35)
+    plt.ylim(-35.,35.)
     plt.xlim(0,360)
-    plt.title("Radar Quixeramobim - Velocity x Azimuth (99,83 km Range)", fontstyle='italic')
+    plt.title("Radar Quixeramobim - Velocity x Azimuth ({:.2f} km Range)".format((r*1490)/1000.), fontstyle='italic')
     plt.ylabel('Velocity (m/s)')
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
-    plt.show()
-    plt.savefig('Radar_Qxb_Band_S - Velocity x Azimuth - Line.png', format='png')
+    #plt.show()
+    plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - ({:.2f} km Range) - Line.png".format((r*1490)/1000.), format='png')
     plt.close()
 
 #@profile()
@@ -222,6 +221,8 @@ def plot_vector_filters(radar, r, u, v):
     velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
 
     theta, ran = np.meshgrid(azimuth[3,:], rang[r])
+
+    y = moving_average(velocity_radial, 3)
 
     figure = plt.figure()
     figure.add_subplot(111, polar=True)

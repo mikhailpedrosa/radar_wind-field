@@ -3,7 +3,6 @@ __description__ = 'Velocity-Azimuth Processing Technique'
 __version__ = '0.1'
 __date__ = '13/04/2015'
 
-import math
 import numpy as np
 from memory_profiler import profile
 
@@ -43,38 +42,16 @@ def vap(radar):
     for elevation in range(nsweeps-1):
         for theta in range(nrays-1):
             for rang in range(ngates-1):
-                u_1[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta+1, rang], math.cos(azimuth[theta] - 1))
-                u_2[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta-1, rang], math.cos(azimuth[theta] + 1))
-                u[elevation, theta, rang] = (u_1[elevation, theta, rang] - u_2[elevation, theta, rang]) / float(math.sin(2))
+                u_1[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta+1, rang], np.cos(azimuth[theta] - 1))
+                u_2[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta-1, rang], np.cos(azimuth[theta] + 1))
+
+                u[elevation, theta, rang] = (u_1[elevation, theta, rang] - u_2[elevation, theta, rang]) / float(np.sin(2))
 
                 #print elevation, theta, rang, "\n", u_1[elevation, theta, rang], "\n", u_2[elevation, theta, rang], "\n", u[elevation, theta, rang]
 
-                v_1[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta-1, rang], math.sin(azimuth[theta] + 1))
-                v_2[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta+1, rang], math.sin(azimuth[theta] - 1))
+                v_1[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta-1, rang], np.sin(azimuth[theta] + 1))
+                v_2[elevation, theta, rang] = np.multiply(velocity_radial[elevation, theta+1, rang], np.sin(azimuth[theta] - 1))
 
-                v[elevation, theta, rang] = (v_1[elevation,theta,rang] - v_2[elevation,theta,rang]) / float(math.sin(2))
+                v[elevation, theta, rang] = (v_1[elevation,theta,rang] - v_2[elevation,theta,rang]) / float(np.sin(2))
                 #print elevation, theta, rang
     return u, v
-
-# def velocity_ca(velocity_radial):
-#     """
-#     :param velocity_radial:
-#     :return:
-#     """
-#
-#     for degree in range(1, 361):
-#         ca = velocity_radial[:,degree-1,:]
-#         #print velocity_ca
-#         #raw_input()
-#     return ca
-
-
-# def velocity_cb(velocity_radial):
-#
-#     for degree in range(1, 361):
-#         if degree != 360:
-#             cb = velocity_radial[:,degree+1,:]
-#         else:
-#             cb = velocity_radial[:,degree,:]
-#         #raw_input()
-#     return cb

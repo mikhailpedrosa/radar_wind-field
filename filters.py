@@ -26,18 +26,30 @@ def moving_average(values, window_size):
 
 
 #@profile() - Implementar
-def gauss(values, window_size):
+def gauss(values, sigma):
     """
 
     :param values:
-    :param window_size:
+    :param sigma:
     :return:
     """
-    window = ndimage.gaussian_filter(values, sigma=window_size)
+    matrix = np.zeros((len(values),))
+    #Mean_V = np.zeros([len(x_bins), len(y_bins)])
+    print matrix.shape
+    exit()
+    for i, x_bin in enumerate(x_bins[:-1]):
+        bin_x = (x > x_bins[i]) & (x <= x_bins[i+1])
+        if (sum(x > 0 for x in bin_xy) > 0) :
+            matrix[i,:]=np.nanmean(V[bin_x][bin_xy])
 
-    return np.convolve(values, window, 'same')
 
-#@profile() - Implementar
+
+    filter_gauss = ndimage.gaussian_filter(values, sigma=sigma)
+    #r = range(-int(values/2),int(values/2)+1)
+    #filter_gauss = [1 / (sigma * math.sqrt(2*math.pi)) * math.exp(-float(x)**2/(2*sigma**2)) for x in r]
+    return filter_gauss
+
+#@profile()
 def median(values, window_size):
     """
 
@@ -45,6 +57,9 @@ def median(values, window_size):
     :param window_size:
     :return:
     """
-    window = np.ones(int(window_size))/float(window_size)
+    matrix = np.zeros((len(values),))
 
-    return np.convolve(values, window, 'same')
+    for index in range(len(values)):
+        matrix[index] = np.nanmedian(values[index:(index+window_size)])
+
+    return matrix

@@ -25,14 +25,11 @@ if __name__ == '__main__':
     v1 = np.load('vectorv.npy')
     dif = datetime.datetime.now() - start
     print '%i s' % dif.seconds
+    #plot_image_no_map(radar)
     #plot_graph_lines_no_filters(radar, r)
     #plot_graph_points_no_filters(radar, r)
+    #plot_vector_no_filters(radar, r, u1, v1)
+    #plot_image_map(radar)
+    plot_graph_lines_filters(radar, r)
+    #plot_graph_points_filters(radar, r)
     #plot_vector_filters(radar, r, u1, v1)
-    #plot_graph_lines_filters(radar, r)
-    #plot_image_no_map(radar)
-
-    #plot_graph_points(radar, r)
-
-
-
-
