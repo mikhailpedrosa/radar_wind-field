@@ -4,6 +4,7 @@ __version__ = '0.1'
 __date__ = '13/04/2015'
 
 import numpy as np
+from filters import vap_moving_average
 from memory_profiler import profile
 
 ELEVATION_LIST = {
@@ -29,7 +30,11 @@ def vap(radar):
     v_1 = np.zeros((10,360,253))
     v_2 = np.zeros((10,360,253))
 
+
     velocity_radial = radar.fields['velocity']['data'].reshape(10,360,253)
+
+    velocity_radial = vap_moving_average(velocity_radial, 3)
+
     azimuth =  radar.azimuth['data']
     #ca = velocity_ca(velocity_radial)
     #cb = velocity_cb(velocity_radial)

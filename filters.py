@@ -7,6 +7,26 @@ import numpy as np
 from scipy import ndimage
 from memory_profiler import profile
 
+
+#@profile()
+def vap_moving_average(values, window_size):
+    """
+
+    :param values:
+    :param window_size:
+    :return:
+    """
+
+    matrix = np.zeros((10,360,253))
+
+    for e in np.arange(10):
+            for r in np.arange(253):
+                for a in np.arange(360):
+                    matrix[e,a,r] = np.nansum(values[e,a:(a+window_size),r])
+
+    return matrix/float(window_size)
+
+
 #@profile()
 def moving_average(values, window_size):
     """
@@ -19,7 +39,7 @@ def moving_average(values, window_size):
     #np.convolve(values, window, 'same')
     matrix = np.zeros((len(values),))
 
-    for index in range(len(values)):
+    for index in np.arange(len(values)):
          matrix[index] = np.nansum(values[index:(index+window_size)])
 
     return matrix/float(window_size)
@@ -36,11 +56,11 @@ def gauss(values, sigma):
     matrix = np.zeros((len(values),))
     #Mean_V = np.zeros([len(x_bins), len(y_bins)])
     print matrix.shape
-    exit()
-    for i, x_bin in enumerate(x_bins[:-1]):
-        bin_x = (x > x_bins[i]) & (x <= x_bins[i+1])
-        if (sum(x > 0 for x in bin_xy) > 0) :
-            matrix[i,:]=np.nanmean(V[bin_x][bin_xy])
+    # exit()
+    # for i, x_bin in enumerate(x_bins[:-1]):
+    #     bin_x = (x > x_bins[i]) & (x <= x_bins[i+1])
+    #     if (sum(x > 0 for x in bin_xy) > 0) :
+    #         matrix[i,:]=np.nanmean(V[bin_x][bin_xy])
 
 
 
@@ -59,7 +79,7 @@ def median(values, window_size):
     """
     matrix = np.zeros((len(values),))
 
-    for index in range(len(values)):
+    for index in np.arange(len(values)):
         matrix[index] = np.nanmedian(values[index:(index+window_size)])
 
     return matrix
