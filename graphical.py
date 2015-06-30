@@ -229,12 +229,12 @@ def plot_graph(radar, r):
     x = azimuth[2, :]
 
     #y = moving_average(y,3)
-    y = median(y,3)
-    #y = gauss(y, 3)
-
+    #y = median(y,3)
+    y = gauss(y, 3)
+    print y.shape
     figure = plt.figure()
     ax = figure.add_subplot(111)
-    plt.plot(x, y, lw='1', label='Raw Vr')
+    plt.scatter(x, y, lw='1', label='Raw Vr')
     #plt.scatter (x, y, label='Raw Vr' )
     ax.spines['bottom'].set_position('center')
     # ax.spines['top'].set_color('none')
@@ -251,8 +251,8 @@ def plot_graph(radar, r):
     ax.set_xlabel('Azimuth (degree)')
     ax.xaxis.set_label_coords(0.5,-0.05)
     plt.legend(fontsize='10')
-    #plt.show()
-    plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - Median ({:.2f} km Range).png".format((r*1490)/1000.), format='png')
+    plt.show()
+    #plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth - Median ({:.2f} km Range).png".format((r*1490)/1000.), format='png')
     plt.close()
 
 
