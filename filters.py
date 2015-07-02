@@ -4,7 +4,10 @@ __version__ = '0.1'
 __date__ = '13/04/2015'
 
 import numpy as np
+import scipy.ndimage as sp
+import scipy.signal as sg
 from astropy.convolution import Gaussian1DKernel
+import matplotlib.pyplot as plt
 from memory_profiler import profile
 
 
@@ -88,18 +91,27 @@ def median(values, window_size):
     return matrix
 
 
-#@profile() - Implementar
-def gauss(values, sigma):
+#@profile()
+def gaussian(values):
     """
 
     :param values:
     :param sigma:
     :return:
     """
-    gaussian = Gaussian1DKernel(sigma)
-    print values
-    mdat = np.ma.masked_array(values, np.isnan(values))
-    print mdat==values
-    a = values.filled(np.nan)
-    filter_gauss = np.convolve(values, gaussian, mode='same')
+    windows = [0.15,  0.75, 0.15]
+    array = np.ma.masked_array(values, np.isnan(values))
+    values = array.filled(np.nan)
+    filter_gauss = np.convolve(values, windows, mode='same')
     return filter_gauss
+
+
+#@profile()
+def moving_triangle():
+
+    return
+
+
+def gauss(n,sigma):
+    r = range(-int(n/2),int(n/2)+1)
+    return [1 / sigma * np.sqrt(2*np.pi) * np.exp(-float(x)**2/(2*sigma**2)) for x in r]

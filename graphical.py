@@ -219,7 +219,7 @@ def plot_graph_lines_filters(radar, r):
     plt.savefig("Radar_Qxb_Band_S - Velocity x Azimuth (Moving Average e Median)- ({:.2f} km Range).png".format((r*1490)/1000.), format='png')
     plt.close()
 
-
+#@profile()
 def plot_graph(radar, r):
 
     azimuth = radar.azimuth['data'].reshape(10,360)
@@ -230,11 +230,11 @@ def plot_graph(radar, r):
 
     #y = moving_average(y,3)
     #y = median(y,3)
-    y = gauss(y, 3)
+    y = gaussian(y)
     print y.shape
     figure = plt.figure()
     ax = figure.add_subplot(111)
-    plt.scatter(x, y, lw='1', label='Raw Vr')
+    plt.plot(x, y, lw='1', label='Raw Vr')
     #plt.scatter (x, y, label='Raw Vr' )
     ax.spines['bottom'].set_position('center')
     # ax.spines['top'].set_color('none')
